@@ -1,0 +1,193 @@
+<!--
+  ~ Copyright 2010 Automated Logic
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Trendserver Documentation</title>
+    <style type="text/css">
+        .replacable { font-style:italic; }
+
+        .code { font-family:monospace; }
+
+        h1 { font-family:sans-serif; font-size: 16pt; }
+
+        h2 { font-family:sans-serif; font-size: 14pt; }
+
+        table { border: solid black 1px; }
+
+        tr:nth-child(odd) { background-color:#eef;  }
+
+        td {
+            vertical-align:top;
+            padding-top:5px;
+            padding-bottom:5px;
+        }
+
+        .indent { padding-left:16pt; }
+    </style>
+
+</head>
+<body>
+<h1>Overview</h1>
+<p>
+    The trendserver Add-On to WebCTRL provides a
+    <a target="_blank" href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a> style
+    web service to retrieve trend samples more efficiently than the built in SOAP access.
+</p>
+<p>
+    Data should be retrieved using an HTTP POST request to a URL of
+    <span class="code"><span class="replacable">webctrl-server</span>/trendserver/read</span>.
+</p>
+<p>
+    This Add-On uses <a target="_blank" href="http://en.wikipedia.org/wiki/Basic_access_authentication">Basic Authentication</a>.
+    The specified user must have the functional privilege in WebCTRL of &quot;Remote Data Access - SOAP&quot;.
+</p>
+<h1>Parameters</h1>
+<table>
+    <tbody>
+        <tr>
+            <td>id</td>
+            <td>
+                ID of trend sources to retrieve.  Note that typically there will be multiple id parameters with the same
+                parameter name.  These should be in the format returned by the Add-On API's
+                <span class="code">Location.getPersistentLookupString</span>.  This is the format shown in the
+                <span class="code">Lookup ID</span> column of the
+                <a href="search.jsp">trend search page</a>.  An example of this format is
+                &quot;<span class="code">ABSPATH:1:#electric_meter1/demand_tn</span>&quot;.
+            </td>
+        </tr>
+        <tr>
+            <td>format&nbsp;(optional)</td>
+            <td>
+                Valid values are: <span class="code">csv</span> (default) or <span class="code">json</span>.
+                This parameter determines the format of the response (see <a href="#response">below</a>).
+            </td>
+        </tr>
+        <tr>
+            <td>start</td>
+            <td>
+                Starting date to retrieve trends.  The date should be formatted as
+                <span class="code">yyyy-mm-dd</span>, for example:
+                &quot;<span class="code">2010-07-04</span>&quot; for the 4th of July, 2010.  The starting date is inclusive.
+            </td>
+        </tr>
+        <tr>
+            <td>end</td>
+            <td>
+                Ending date to retrieve trends.  The date should be in the same format as the start parameter.
+                Trends will be retrieved through the end of the specified end date
+                (exclusive of the midnight transitioning to the next day).  Midnight is considered to be part of
+                the following day.  So to retrieve only one day's trends, specify the same date for start and end.
+            </td>
+        </tr>
+        <tr>
+            <td>defaultdigits&nbsp;(optional)</td>
+            <td>
+                The default number of digits past the decimal place to use for the string representation of analog data.  For the version of the
+                Add-On API prior to WebCTRL 5, this value is always used.  For WebCTRL 5 and later, most trend sources
+                know their own precision and will use their native precision instead.  The default value for defaultdigits
+                is 2.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h1><a id="response">Response Format</a></h1>
+<div class="indent">
+    <h2>CSV Format</h2>
+    <p>
+        In the CSV format, the samples from each data source is on a single line terminated with a carriage return.
+        The first entry on each line is the id of the trend source escaped
+        <a target="_blank" href="http://en.wikipedia.org/wiki/Comma-separated_values">according to the rules of CSV</a>
+        if necessary.  The remaining entries are pairs of timestamps and values.  All entries on a line are separated by a comma.
+    </p>
+    <p>
+        Timestamps are encoded as an integer string representing the number of milliseconds since January 1, 1970 in
+        the local timezone for the site of the trend source.  For example, <span class="code">1278261000000</span>,
+        is July 4th, 2010 at 12:30pm.
+    </p>
+    <p>
+        Analog values are encoded as floating point number string with up to <span class="replacable">defaultdigits</span>
+        digits past the decimal place.  Trailing 0's are removed and integers will have no decimal point.
+    </p>
+    <p>
+        Digital values will either be the string &quot;true&quot; or the string &quot;false&quot;.
+    </p>
+    <p>
+        Example encoding for two sources with two samples each.
+<pre>
+ABSPATH:1:#board_room/ht_stpt_tn,1282017600000,55.1,1282017900000,55
+ABSPATH:1:#board_room/locked_tn,1282017600000,false,1282017900000,true
+</pre>
+    </p>
+    <br>
+    
+    <h2>JSON Format</h2>
+    <p>
+        In the <a target="_blank" href="http://www.json.org/">JSON</a> format, the overall result is an array of trend source source objects.  Each trend source
+        object has an id with key of &quot;id&quot; and an array of samples with a key of &quot;s&quot;.
+        Each sample in the array has a timestamp with a key of &quot;t&quot; and a value.  The key for the
+        value depends on the type of data.  Analog values have a key of &quot;a&quot; and digital values have a
+        a key of &quot;d&quot;.  The string encoding for both dates and values is identical to what is used
+        in the CSV format.
+    </p>
+    <p>Note that the order keys are written into an object is not guaranteed.</p>
+    <p>
+        Example encoding for two sources with two samples each.
+        Note that this has been broken into multiple lines and white space has been added for clarity.
+        The real result has no whitespace and is all on one line:
+    
+<pre>
+[
+  {
+    "id":"ABSPATH:1:#board_room/ht_stpt_tn",
+    "s":[{"t":"1282017600000","a":"55.1"},{"t":"1282017900000","a":"55"}]
+  },
+  {
+    "id":"ABSPATH:1:#board_room/locked_tn",
+    "s":[{"t":"1282017600000","d":"false"},{"t":"1282017900000","d":"true"}]
+  }
+]
+</pre>
+    </p>
+</div>
+<br>
+
+<h1>Special Samples</h1>
+<p>
+    WebCTRL captures a number of types of &quot;special&quot; samples such as time synch messages, or indications that trending
+    was enabled or disabled.  None of these types of samples are returned throught this add-on.  Only actual data samples
+    will be retrieved.
+</p>
+<br>
+
+<h1>Optimizing Reads</h1>
+<p>
+    This add-on intentionally does not force the server to read data from the field.  It only reads data from the WebCTRL
+    trend database.  Any trend sources you will use should be configured to push their data to the server before you will
+    attempt to retrieve it.  Typically, this is handled by making sure that trends are reported from the field every 6
+    hours or so.  In this case, you might wait to retrieve trends another day.  For example, an automated retrieval program
+    running at 1am Wednesday morning might retrieve the data from all day on Monday.  The <a href="search.jsp">trend search page</a>
+    can display the upload period for a trend source (how often all the trends are sent from the field modules to the server).
+</p>
+<p>
+    This add-on will support gzip encoding of the http stream if the request indicates it is supported.  Add &quot;gzip&quot;
+    to the list of encodings in the Accept-Encoding header.  This can improve performance over slower connections.
+</p>
+</body>
+</html>

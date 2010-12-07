@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+  ~ Copyright 2010 Automated Logic
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+<html>
+  <head>
+      <title>Trend Query</title>
+      <style type="text/css">
+        #results_table td { border:solid black 1px; }
+        #results_table tr:nth-child(even) { background-color: #eee; }
+        body {font-family:sans-serif; color:black; }
+        td { padding:3px;  }
+        #graph { float: right; }
+      </style>
+      <script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+      <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+      <script type="text/javascript">
+        google.load('visualization', '1', {'packages':['annotatedtimeline']});
+
+        function formatDate(date)
+        {
+          return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()
+        }
+
+        function query_clicked(event)
+        {
+          var lookupId = $('#query_lookupid').val();
+          var startDate = $('#query_startdate').val();
+          var endDate = $('#query_enddate').val();
+          var args = {id:lookupId, start:startDate, end:endDate}
+          var url = "/trendserver/read"
+
+          $.getJSON(url, args, query_results)
+        }
+
+        function query_results(dataArray)
+        {
+          var data = dataArray[0]
+          $('#results_header').text('Results for '+data.id)
+          var results = $('#results_table').empty() 
+          $.each(data.s, function(index, sampleData) {
+            results.append(build_sample_row(sampleData))
+          });
+          graph(data.s)
+        }
+
+        function build_sample_row(sampleData)
+        {
+          var string = '<tr>'
+          string +=    '  <td>'+new Date(sampleData.t).toString().substring(0, 24)+'</td>'
+          string +=    '  <td>'+(sampleData.a ? sampleData.a : sampleData.d)+'</td>'
+          string +=    '</tr>'
+          return string
+        }
+
+        function handle_error(e, xhr, settings, exception)
+        {
+          $('#results_table').empty()
+          $('#results_header').html(xhr.responseText)
+        }
+
+        function graph(data)
+        {
+            var dt = new google.visualization.DataTable();
+            dt.addColumn('date', 'Time');
+            dt.addColumn('number', 'Value')
+
+            for (var i=0; i<data.length; i++)
+            {
+                var val = data[i].a ? parseFloat(data[i].a) : (data[i].d ? 1 : 0) 
+                dt.addRow([new Date(data[i].t), val])
+                dt.addRow([new Date(data[i].t), parseFloat(data[i].a)])
+            }           
+
+            var atl = new google.visualization.AnnotatedTimeLine(document.getElementById('graph'));
+            atl.draw(dt, {scaleType: 'maximized', allowRedraw:true, dateFormat: 'MMM/d/yyyy kk:mm'});
+        }
+
+        $(function() {
+          var today = new Date()
+          var yesterday = new Date(today.getTime()-24*60*60*1000)
+          $('#query_startdate').attr('value', formatDate(yesterday))
+          $('#query_enddate').attr('value', formatDate(today))
+
+          var params = location.search
+          if (params) {
+            var pattern = /\?(.*&)?lookupID=([^&]+)/
+            var lookupId = unescape(pattern.exec(params)[2])
+            $('#query_lookupid').attr('value', lookupId)
+          }
+
+          $('#query_button').bind('click', query_clicked);
+          $('#query').ajaxError(handle_error);
+        });
+      </script>
+  </head>
+  <body>
+    <div>This is a sample that shows how to use jQuery (a javascript library) to retrieve trends (via JSON) using the
+    RESTful APIs provided by this add-on.</div>
+    <br/>
+    <table id="query" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>Lookup ID: </td>
+        <td><input id="query_lookupid" type="text" value="" size="80"/></td>
+      </tr>
+      <tr>
+        <td colspan="2">(Dates must be formatted yyyy-mm-dd &mdash; for example "2010-07-04" for the 4th of July, 2010.)</td>
+      </tr>
+      <tr>
+        <td>Start Date:</td>
+        <td><input id="query_startdate" type="text" value="" size="15"/></td>
+      </tr>
+      <tr>
+        <td>End Date:</td>
+        <td><input id="query_enddate" type="text" value="" size="15"/></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><button id="query_button">Get Trends</button></td>
+      </tr>
+    </table>
+    <br/>
+    <div id="results_header"></div>
+    <div id="graph"  style="width:600px; height:250px;"></div>
+    <table id="results_table" cellspacing="0" cellpadding="0"></table>
+  </body>
+</html>

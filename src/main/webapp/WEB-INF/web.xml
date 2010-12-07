@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2010 Automated Logic
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" >
+
+    <servlet>
+        <servlet-name>trend</servlet-name>
+        <servlet-class>com.controlj.green.bulktrend.trendserver.TrendServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>trend</servlet-name>
+        <url-pattern>/read/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>search</servlet-name>
+        <servlet-class>com.controlj.green.bulktrend.trendserver.SearchServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>search</servlet-name>
+        <url-pattern>/servlet/search/*</url-pattern>
+    </servlet-mapping>
+
+    <security-constraint>
+       <web-resource-collection>
+          <web-resource-name>WEB</web-resource-name>
+          <url-pattern>/*</url-pattern>
+          <http-method>GET</http-method>
+          <http-method>POST</http-method>
+       </web-resource-collection>
+       <auth-constraint>
+           <!-- The following functional privilege is listed as "Remote Data Access - SOAP" -->
+          <role-name>func_remote_data_access</role-name>
+       </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+       <auth-method>BASIC</auth-method>
+    </login-config>
+</web-app>
+    
