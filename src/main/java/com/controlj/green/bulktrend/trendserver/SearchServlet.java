@@ -16,9 +16,9 @@
 
 package com.controlj.green.bulktrend.trendserver;
 
-import com.controlj.green.addonsupport.AddOnInfo;
 import com.controlj.green.addonsupport.InvalidConnectionRequestException;
 import com.controlj.green.addonsupport.access.ActionExecutionException;
+import com.controlj.green.addonsupport.access.DirectAccess;
 import com.controlj.green.addonsupport.access.SystemConnection;
 import com.controlj.green.addonsupport.access.SystemException;
 import com.controlj.green.bulktrend.trend.ParameterizedTrendAcceptor;
@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -57,10 +56,9 @@ public class SearchServlet extends BaseHttpServlet  {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ParameterizedTrendAcceptor filter = getFilter(req);
 
-        AddOnInfo ao = AddOnInfo.getAddOnInfo();
         SystemConnection connection = null;
         try {
-            connection = ao.getUserSystemConnection(req);
+            connection = DirectAccess.getDirectAccess().getUserSystemConnection(req);
         } catch (InvalidConnectionRequestException e) {
             throw new ServletException("Error getting Add-On connection", e);
         }

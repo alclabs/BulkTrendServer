@@ -16,19 +16,9 @@
 
 package com.controlj.green.bulktrend.trend;
 
-import com.controlj.green.addonsupport.AddOnInfo;
-import com.controlj.green.addonsupport.access.*;
-import com.controlj.green.addonsupport.access.aspect.AnalogTrendSource;
+import com.controlj.green.addonsupport.access.Location;
+import com.controlj.green.addonsupport.access.TrendException;
 import com.controlj.green.addonsupport.access.aspect.TrendSource;
-import com.controlj.green.addonsupport.access.trend.*;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.BufferedReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 
 public class TrendSourceInfo
 {

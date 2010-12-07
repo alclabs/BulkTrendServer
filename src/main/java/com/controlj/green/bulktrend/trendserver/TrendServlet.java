@@ -16,7 +16,6 @@
 
 package com.controlj.green.bulktrend.trendserver;
 
-import com.controlj.green.addonsupport.AddOnInfo;
 import com.controlj.green.addonsupport.InvalidConnectionRequestException;
 import com.controlj.green.addonsupport.access.*;
 import com.controlj.green.addonsupport.access.aspect.AnalogTrendSource;
@@ -112,10 +111,9 @@ public class TrendServlet extends BaseHttpServlet {
         }
 
 
-        AddOnInfo ao = AddOnInfo.getAddOnInfo();
         SystemConnection connection;
         try {
-            connection = ao.getUserSystemConnection(request);
+            connection = DirectAccess.getDirectAccess().getUserSystemConnection(request);
         } catch (InvalidConnectionRequestException e) {
             throw new ServletException("Error getting a SystemConnection", e);
         }
