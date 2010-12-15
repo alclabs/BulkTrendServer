@@ -5,7 +5,7 @@ The BulkTrendServer Add-On to WebCTRL provides a REST style web service to retri
 
 Branches
 --------
-A description of the different branches is in [BRANCHES.md](blob/master/BRANCHES.md).
+A description of the different branches is in [BRANCHES.md](BulkTrendServer/blob/master/BRANCHES.md).
 
 Use
 ---
