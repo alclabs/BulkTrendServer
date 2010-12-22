@@ -9,7 +9,7 @@ A description of the different branches is in [BRANCHES.md](BulkTrendServer/blob
 
 Use
 ---
- Data should be retrieved using an HTTP Post request to a URL of webctrl-server/trendserver/read. After installing the BulkTrendServer add-on, the documentation will be available at the /trendserver URL on your WebCTRL site. The source for
+ Data should be retrieved using an HTTP Post request to a URL of webctrl-server/bulktrendserver/read. After installing the BulkTrendServer add-on, the documentation will be available at the /bulktrendserver URL on your WebCTRL site. The source for
 the documentation is in this project at src/main/webapp/doc.html.
 
  See alclabs Bulk Trend Client tool project for a sample java application that can retrieve data from this add-on.
