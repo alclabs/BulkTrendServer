@@ -86,6 +86,12 @@ Website: http://cglib.sourceforge.net
 License: Apache version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 
 -------------------------------------------------------------------------------
+google visualization service
+-------------------------------------------------------------------------------
+Website: http://code.google.com/apis/visualization/interactive_charts.html
+License: http://code.google.com/apis/visualization/terms.html
+
+-------------------------------------------------------------------------------
 json package
 -------------------------------------------------------------------------------
 Copyright (c) 2002 JSON.org
