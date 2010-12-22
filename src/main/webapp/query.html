@@ -49,7 +49,7 @@
           var startDate = $('#query_startdate').val();
           var endDate = $('#query_enddate').val();
           var args = {id:lookupId, start:startDate, end:endDate}
-          var url = "/trendserver/read"
+          var url = "read"
 
           $.getJSON(url, args, query_results)
         }
