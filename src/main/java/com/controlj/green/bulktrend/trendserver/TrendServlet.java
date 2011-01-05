@@ -213,15 +213,15 @@ public class TrendServlet extends BaseHttpServlet {
      */
     @Override
     public void init(ServletConfig servletConfig) {
-        File testFile = new File("webserver/conf/Standalone/localhost/trendserver.xml");
+        File testFile = new File("webserver/conf/Standalone/localhost/bulktrendserver.xml");
         if (testFile.exists()) {
             try {
                 PrintWriter writer = new PrintWriter(testFile);
-                writer.println("<Context path=\"/trendserver\">");
+                writer.println("<Context path=\"/bulktrendserver\">");
                 writer.println("</Context>");
                 writer.close();
             } catch (FileNotFoundException e) {
-                System.err.println("Error rewriting trendserver context file at :"+testFile+".  "+e.getMessage());
+                System.err.println("Error rewriting bulktrendserver context file at :"+testFile+".  "+e.getMessage());
             }
         }
     }
