@@ -29,7 +29,6 @@
     <servlet>
         <servlet-name>trend</servlet-name>
         <servlet-class>com.controlj.green.bulktrend.trendserver.TrendServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>

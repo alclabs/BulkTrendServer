@@ -205,22 +205,4 @@ public class TrendServlet extends BaseHttpServlet {
         result.setHours(24);
         return result;
     }
-
-    /*
-    ONLY needed for hack to allow BASIC authentication to work on a 4.1 system.  Not needed for 5.0
-     */
-    @Override
-    public void init(ServletConfig servletConfig) {
-        File testFile = new File("webserver/conf/Standalone/localhost/trendserver.xml");
-        if (testFile.exists()) {
-            try {
-                PrintWriter writer = new PrintWriter(testFile);
-                writer.println("<Context path=\"/trendserver\">");
-                writer.println("</Context>");
-                writer.close();
-            } catch (FileNotFoundException e) {
-                System.err.println("Error rewriting trendserver context file at :"+testFile+".  "+e.getMessage());
-            }
-        }
-    }
 }
