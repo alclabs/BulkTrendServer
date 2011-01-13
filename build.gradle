@@ -6,7 +6,7 @@ repositories { mavenRepo urls: 'http://repo.alcshare.com' }
 dependencies { gradleScript group: 'com.alcshare', name: 'alclabs-gradle', ext: 'gradle', version: '1.0.2' }
 apply from: configurations.gradleScript.resolve().iterator().next()
 
-version = '1.0.1'
+version = '1.0'
 
 repositories {
     mavenRepo urls: 'http://m2repo.spockframework.org/snapshots'
