@@ -3,10 +3,15 @@
 // and then apply it.
 configurations { gradleScript }
 repositories { mavenRepo urls: 'http://repo.alcshare.com' }
-dependencies { gradleScript group: 'com.alcshare', name: 'alclabs-gradle', ext: 'gradle', version: '1.0.2' }
+dependencies { gradleScript group: 'com.alcshare', name: 'alclabs-gradle', ext: 'gradle', version: '1.0.5' }
 apply from: configurations.gradleScript.resolve().iterator().next()
 
-version = '2.0'
+info {
+  name = 'Bulk Trend Server'
+  description = 'Efficiently provides trend data through a REST web service'
+  version = '2.0'
+  vendor = 'ALC Labs'
+}
 
 repositories {
     mavenRepo urls: 'http://m2repo.spockframework.org/snapshots'
