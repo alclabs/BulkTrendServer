@@ -90,6 +90,29 @@ public class ParameterizedTrendAcceptor implements AspectAcceptor<TrendSource> {
         return this;
     }
 
+    public ParameterizedTrendAcceptor names(String commaSepNames) {
+        final String names[] = commaSepNames.split(",");
+        for (int i=0; i<names.length; i++) {
+            names[i] = names[i].trim();
+        }
+        checks.add(new AspectAcceptor<TrendSource>() {
+            @Override
+            public boolean accept(@NotNull TrendSource ts) {
+                boolean result = false;
+
+                String displayName = ts.getLocation().getDisplayName();
+                for (String name : names) {
+                    if (displayName.equalsIgnoreCase(name)) {
+                        result = true;
+                        break;
+                    }
+                }
+
+                return result;
+            }
+        });
+        return this;
+    }
 
 /* Template
     public ParameterizedTrendAcceptor historical() {

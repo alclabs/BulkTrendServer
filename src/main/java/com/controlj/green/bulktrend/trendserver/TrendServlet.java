@@ -30,6 +30,7 @@ import com.controlj.green.addonsupport.access.aspect.TrendSource;
 import com.controlj.green.addonsupport.access.trend.*;
 //import org.apache.log4j.Logger;
 //import org.apache.log4j.PropertyConfigurator;
+import com.controlj.green.bulktrend.util.Logging;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletConfig;
@@ -59,7 +60,10 @@ public class TrendServlet extends BaseHttpServlet {
        }
        catch (ServletException e)
        {
-          response.sendError(BAD_RESPONSE, e.getMessage());
+           Logging.dateStampLogger.println(e);
+           if (!response.isCommitted()) {
+               response.sendError(BAD_RESPONSE, e.getMessage());
+           }
        }
     }
 
@@ -177,6 +181,8 @@ public class TrendServlet extends BaseHttpServlet {
                        throw new ServletException("Error resolving location: '"+ id+ '\'', e);
                     } catch (NoSuchAspectException e) {
                        throw new ServletException("Error getting trend source from location:'"+ id+ '\'', e);
+                    } catch (NullPointerException e) {
+                       throw new ServletException("NPE getting trend source from location:'"+ id+ '\'', e);
                     }
                 }
                 formatter.close();

@@ -48,6 +48,7 @@ public class SearchServlet extends BaseHttpServlet  {
     public static final String PARAM_HISTORICAL = "historical";
     public static final String PARAM_FIXED_INTERVAL = "fixed_interval";
     public static final String PARAM_UPLOAD_GREATER = "upload_greater";
+    public static final String PARAM_NAMES = "names";
     public static final String PARAM_PATH = "path";
 
     private static final DecimalFormat twoDigitFormat = new DecimalFormat("00");
@@ -180,6 +181,13 @@ public class SearchServlet extends BaseHttpServlet  {
                 int param = getIntParameter(req, PARAM_UPLOAD_GREATER);
                 filter.uploadIntervalGreater(param * 60 * 1000L);
             } catch (NumberFormatException e) { }  //Not a number, ignore
+        }
+
+        if (hasOption(req, PARAM_NAMES)) {
+            String names = req.getParameter(PARAM_NAMES);
+            if (names != null && !names.trim().isEmpty()) {
+                filter.names(names);
+            }
         }
 
         return filter;

@@ -3,13 +3,13 @@
 // and then apply it.
 configurations { gradleScript }
 repositories { mavenRepo urls: 'http://repo.alcshare.com' }
-dependencies { gradleScript group: 'com.alcshare', name: 'alclabs-gradle', ext: 'gradle', version: '1.0.5' }
+dependencies { gradleScript group: 'com.alcshare', name: 'alclabs-gradle', ext: 'gradle', version: '1.18' }
 apply from: configurations.gradleScript.resolve().iterator().next()
 
 info {
   name = 'Bulk Trend Server'
   description = 'Efficiently provides trend data through a REST web service'
-  version = '2.0'
+  version = '2.1'
   vendor = 'ALC Labs'
 }
 
@@ -27,6 +27,7 @@ dependencies {
     testCompile 'junit:junit:4.8.1'
     testCompile 'cglib:cglib-nodep:2.2'
 
+    providedCompile 'com.controlj.green:addonsupport-api-addon:1.1.+'
     providedCompile 'com.controlj.green:directaccess-api-addon:1.1.+'
     providedCompile 'javax.servlet:servlet-api:2.5'
 }
