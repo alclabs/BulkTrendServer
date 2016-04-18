@@ -112,8 +112,8 @@
             <td><input type="text" name="upload_greater"> (minutes)</td>
         </tr>
         <tr>
-            <td>Named (comma separated)</td>
-            <td><input type="text" name="names"></td>
+            <td>Display Names (comma separated)</td>
+            <td><textarea name="names" rows="3" cols="80"></textarea></td>
         </tr>
     </table>
     <div><button id="run" type="button">Search</button></div>
